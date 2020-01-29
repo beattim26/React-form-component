@@ -116,7 +116,8 @@ class FormDialog extends Component<Props, State> {
   handleSelectChanged = (i: number) => (e: any) => {
     e.preventDefault();
     const { result } = this.state;
-    const keyName = Object.keys(result)[i];
+    const resultKeys = Object.keys(result);
+    const keyName = resultKeys[i];
     this.setState({ result: { ...result, [keyName]: e.target.value } });
   };
 
@@ -125,6 +126,7 @@ class FormDialog extends Component<Props, State> {
 
     return options.map((item, index) => {
       const { result } = this.state;
+      const resultKey = result[Object.keys(result)[index]];
       const defaultInput = selectedOptions ? selectedOptions[item] : '';
       const label = `Field ${index + 1}`;
 
@@ -136,17 +138,19 @@ class FormDialog extends Component<Props, State> {
             defaultValue={defaultInput}
             variant="outlined"
             className={classes.fieldBoxInput}
+            id={`textfield-input-${index + 1}`}
           />
           <FormControl
             variant="outlined"
             className={classes.fieldBoxSelect}
           >
             <Select
-              value={result[Object.keys(result)[index]]}
+              value={resultKey}
               onChange={this.handleSelectChanged(index)}
+              style={{ height: '100%' }}
             >
               {options.map((name, i) => (
-                <MenuItem value={i} key={`${name}:${i + 1}`}>{name}</MenuItem>
+                <MenuItem value={i} key={`${name}:${index + 1}-${i + 1}`}>{name}</MenuItem>
               ))}
             </Select>
           </FormControl>
